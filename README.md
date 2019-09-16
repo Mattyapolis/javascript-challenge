@@ -1,4 +1,5 @@
-# javascript-challenge - University of Minnesota Data Analitics & Visualization Boot Camp; May 2019 Cohort 4
+# javascript-challenge
+University of Minnesota Data Analitics & Visualization Boot Camp; May 2019 Cohort 4
 
 # JavaScript Homework - JavaScript and DOM Manipulation
 

@@ -26,47 +26,44 @@ button.on('click', function() {
     //clear data from table
     tbody.html(" ");
 
-    //reference form input value
-    var dateElement = d3.select('#datetime');
-    var dateInput  = dateElement.property('value');
-    var cityElement = d3.select('#city');
-    var cityInput = cityElement.property('value');
-    var stateElement = d3.select('#state');
-    var stateInput = stateElement.property('value');
-    var countryElement = d3.select('#country');
-    var countryInput = countryElement.property('value');
-    var shapeElement = d3.select('#shape');
-    var shapeInput = shapeElement.property('value');
-    var durationElement = d3.select('#durationMinutes');
-    var durationInput = durationElement.property('value');
     
-    console.log(dateInput)//check date input capture
 
-    //create filter to return ojbects with 'datetime' key value that matches user input
-    var dateFilter = tableData.filter(ufoRecord => ufoRecord.datetime === dateInput);
-    var cityFilter = tableData.filter(ufoRecord => ufoRecord.city === cityInput);
-    var stateFilter = tableData.filter(ufoRecord => ufoRecord.state === stateInput);
-    var countryFilter = tableData.filter(ufoRecord => ufoRecord.country === countryInput);
-    var shapeFilter = tableData.filter(ufoRecord => ufoRecord.shape === shapeInput);
-    var durationFilter = tableData.filter(ufoRecord => ufoRecord.durationMinutes == durationInput);
-    // console.log(filteredData)//check filtered data object
+    var filtersObj = {
+        'datetime': d3.select('#datetime').property('value'),
+        'city': d3.select('#city').property('value'),
+        'state': d3.select('#state').property('value'),
+        'country': d3.select('#country').property('value'),
+        'shape': d3.select('#shape').property('value'),
+        'durationMinutes': d3.select('#durationMinutes').property('value')
+    };
 
+    console.log(filtersObj)
 
-
-
-
-    //check that date is entered in valid format and if so populate table with filtered data
-    if (moment(dateInput, 'M/D/YYYY', true).isValid() || dateInput.length==0){
-        createTable(dateFilter)
-        createTable(cityFilter)
-        createTable(stateFilter)
-        createTable(countryFilter)
-        createTable(shapeFilter)
-        createTable(durationFilter)
+    for (key in filtersObj) {
+        if (!filtersObj[key]) {
+            delete filtersObj[key];
+        }
     }
-    else {
-        alert("Please enter a date in January 2010 as M/D/YYYY format");
-    }
-})
+
+    var filters = Object.entries(filtersObj);
+
+    console.log(filters)
+
+    const filteredData = tableData.filter(item => 
+        filters.every(([key, value]) => item[key] == value)
+    );
+
+    console.log(filteredData);
+
+    createTable(filteredData);
+
+    // //check that date is entered in valid format and if so populate table with filtered data
+    // if (moment(filtersObj.datetime, 'M/D/YYYY', true).isValid() || !filtersObj['datime']){
+    //     createTable(filteredData); 
+    // }
+    // else {
+    //     alert("Please enter a date in January 2010 as M/D/YYYY format");
+    // }
+});
 
 

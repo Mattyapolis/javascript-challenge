@@ -16,6 +16,7 @@ function createTable(ufoData){
     })
 }
 
+// Populate data table when page first loads.
 createTable(tableData)
 
 // reference button in variable
@@ -23,11 +24,10 @@ var button = d3.select('#filter-btn');
 
 //create event listener to execute function on button click
 button.on('click', function() {
-    //clear data from table
-    tbody.html(" ");
 
-    
-
+        tbody.html(" ");
+        
+    // create an object containing user filter input values
     var filtersObj = {
         'datetime': d3.select('#datetime').property('value'),
         'city': d3.select('#city').property('value'),
@@ -37,33 +37,38 @@ button.on('click', function() {
         'durationMinutes': d3.select('#durationMinutes').property('value')
     };
 
-    console.log(filtersObj)
+    // Check that is the entered in the correct format, if so proceed. Otherwise pop up an alert
+    if (moment(filtersObj.datetime, 'M/D/YYYY', true).isValid() || !filtersObj.datetime){
+        
+        console.log(filtersObj);
 
-    for (key in filtersObj) {
-        if (!filtersObj[key]) {
-            delete filtersObj[key];
+        // Delete any items from the filtered objects if there are no user inputs
+        for (key in filtersObj) {
+            if (!filtersObj[key]) {
+                delete filtersObj[key];
+            }
         }
+
+        // create an array of key value pairs of the filter user inputs
+        var filters = Object.entries(filtersObj);
+
+        console.log(filters)
+        
+        //Create a filter to use on the entire data set selecting only those objects that contain the filter user inputs
+        const filteredData = tableData.filter(item => 
+            filters.every(([key, value]) => item[key] == value)
+        );
+
+        console.log(filteredData);
+
+        createTable(filteredData);
+
+        
+
+        }
+    else {
+        alert("Please enter a date in January 2010 as M/D/YYYY format");
     }
-
-    var filters = Object.entries(filtersObj);
-
-    console.log(filters)
-
-    const filteredData = tableData.filter(item => 
-        filters.every(([key, value]) => item[key] == value)
-    );
-
-    console.log(filteredData);
-
-    createTable(filteredData);
-
-    // //check that date is entered in valid format and if so populate table with filtered data
-    // if (moment(filtersObj.datetime, 'M/D/YYYY', true).isValid() || !filtersObj['datime']){
-    //     createTable(filteredData); 
-    // }
-    // else {
-    //     alert("Please enter a date in January 2010 as M/D/YYYY format");
-    // }
 });
 
 
